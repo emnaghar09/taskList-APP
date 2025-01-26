@@ -48,7 +48,11 @@ class TaskService
     {
         return $this->taskListRepository->findById($id);
     }
+    public function getUserTasks($idUser): array
+    {
+        return $this->taskRepository->findTasksByUserId($idUser);
+    }
 
-
+    
 
 }

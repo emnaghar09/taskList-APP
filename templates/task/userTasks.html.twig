@@ -5,7 +5,6 @@
 {% block body %}
    <div class="tasks-container">
         <h1 class="mt-5">Mes Listes</h1>
-        <a href="{{ path('add_task') }}" class="btn btn-custom">Ajouter une tache</a>
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
@@ -30,5 +29,14 @@
                 {% endfor %}
             </tbody>
         </table>
+
+                <div class="form-container">
+        <h1 class="text-center mb-4">Ajouter une Liste</h1>
+        {{ form_start(form) }}
+            {{ form_row(form.name) }}
+            <button class="btn btn-custom btn-block">Create</button>
+        {{ form_end(form) }}
     </div>
+    </div>
+
 {% endblock %}

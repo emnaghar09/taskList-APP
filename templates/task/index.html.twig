@@ -13,6 +13,7 @@
                     <th scope="col">description</th>
                     <th scope="col">Date</th>
                     <th scope="col">status</th>
+                    <th scope="col">List</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,7 @@
                         <td>{{ task.description }}</td>
                         <td>{{ task.date|date('d/m/Y H:i') }}</td>
                         <td>{{ task.status }}</td>
+                        <td><a href="{{ path('get_task_by_list_id', { 'id': task.taskList.id }) }}">{{ task.taskList.name }}</a></td>
                         <td>
                             {# <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-warning">Modifier</a>
                             <form action="{{ path('task_delete', { 'id': task.id }) }}" method="post" style="display:inline;">

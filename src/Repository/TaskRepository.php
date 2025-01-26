@@ -39,20 +39,34 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
-   /**
+    /**
     * @return Task[] Returns an array of Task objects
     */
-   public function findByTaskList($value): array
-   {
-       return $this->createQueryBuilder('t')
-           ->andWhere('t.taskList = :val')
-           ->setParameter('val', $value)
-           ->orderBy('t.id', 'ASC')
-           ->setMaxResults(10)
-           ->getQuery()
-           ->getResult()
-       ;
-   }
+    public function findByTaskList($value): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.taskList = :val')
+            ->setParameter('val', $value)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    /**
+    * @return Task[] Returns an array of Task objects
+    */
+    public function findTasksByUserId($userId): array
+{
+    return $this->createQueryBuilder('t')
+        ->join('t.taskList', 'tl') // Jointure avec TaskList
+        ->join('tl.user', 'u') // Jointure avec User
+        ->andWhere('u.id = :userId') // Filtrer par l'identifiant de l'utilisateur
+        ->setParameter('userId', $userId)
+        ->getQuery()
+        ->getResult();
+}
+
 
 //    public function findOneBySomeField($value): ?Task
 //    {

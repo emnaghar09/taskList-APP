@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Task;
 use App\Service\TaskService;
 use App\Form\TaskType;
+use App\Form\TaskListFormType;
+use App\Entity\TaskList;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TaskController extends AbstractController
 {
@@ -43,29 +46,54 @@ class TaskController extends AbstractController
     }
     
         /** 
-     * @Route("/userTaskList", name="get_user_task", methods={"GET"})
+     * @Route("/userTaskList", name="get_All_user_taskList", methods={"GET","POST"})
      */
-    public function getUserTaskList(): Response{
+    public function getUserTaskList(Request $request,EntityManagerInterface $entityManager): Response{
         $userId=$this->getUser()->getId();
         $userTaskLists=  $this->taskService->getUserTaskLists($userId);
-        return $this->render('task/userTasks.html.twig', ['userTaskLists'=> $userTaskLists]);
-    }
+        $taskList= new TaskList();
+        $form = $this->createForm(TaskListFormType::class, $taskList);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $taskList->setUser($this->getUser());
+            $taskList->setDate(new \DateTime());
+            $entityManager->persist($taskList);
+            $entityManager->flush();
+            $this->addFlash('success', 'Task created successfully!');
+            $form = $this->createForm(TaskListFormType::class, $taskList); // Nouveau formulaire pour cet objet
 
+            return $this->render('task/userTasks.html.twig', ['userTaskLists'=> $userTaskLists,
+                'form' => $form->createView(),
+            ]);
+        }
+        return $this->render('task/userTasks.html.twig', ['userTaskLists'=> $userTaskLists, 'form'=>$form->createView()]);
+    }
+        /** 
+     * @Route("/userTasks", name="get_all_user_task", methods={"GET"})
+     */
+    public function getUserTasks(): Response{
+        $userId=$this->getUser()->getId();
+        $userTasks=  $this->taskService->getUserTasks($userId);
+        return $this->render('task/list.html.twig', ['userTasks'=> $userTasks]);
+    }
     /**
      * @Route("/new", name="add_task", methods={"GET","POST"})
      */
     public function createTask(Request $request): Response
     {
         $task= new Task();
-        $form= $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, [
+            'user' => $this->getUser(),
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->taskService->createTask($task);
             $this->addFlash('success', 'Task created successfully!');
 
-            return $this->redirectToRoute('get_user_task');
+            return $this->redirectToRoute('get_All_user_taskList');
         }
         return $this->render('task/new.html.twig', ['form'=>$form->createView()]);
     }
+
 
 }

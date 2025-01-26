@@ -4,7 +4,7 @@
 
 {% block body %}
    <div class="tasks-container">
-        <h1 class="mt-5">Gestionnaire de tache</h1>
+        <h1 class="mt-5">Toutes mes tache</h1>
         <a href="{{ path('add_task') }}" class="btn btn-custom">Ajouter une tache</a>
         <table class="table table-striped mt-3">
             <thead>
@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for task in tasks %}
+                {% for task in userTasks %}
                     <tr>
                         <td>{{ task.title }}</td>
                         <td>{{ task.description }}</td>
