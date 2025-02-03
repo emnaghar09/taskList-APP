@@ -1,0 +1,132 @@
+{# templates/task/home.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Gestion de Tâches{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+
+
+        <!-- Image Card Below Title -->
+        <div class="card custom-card mb-5">
+            <img src="{{ asset('images/task-manager1.png') }}" class="card-img-top img-fluid" alt="Gestion de Tâches">
+            <div class="card-body">
+                <p class="card-text">Découvrez les fonctionnalités de notre gestionnaire de tâches : création, gestion et suivi des tâches facilement et rapidement.</p>
+            </div>
+        </div>
+        <!-- Title Section -->
+        <div class="text-center mt-5">
+            <h1 class="title">Bienvenue sur le Gestionnaire de Tâches</h1>
+            <p class="text-center">Gérez vos tâches de manière simple et efficace. Vous pouvez créer, modifier, et supprimer vos tâches en toute simplicité.</p>
+        </div>
+        <!-- Cards Section -->
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-5">
+            <!-- Card 1 -->
+            <div class="col mb-4">
+                <div class="card custom-card">
+                    <img src="{{ asset('images/card/task-add.jpg') }}" class="card-img-top img-fluid" alt="Ajouter une tâche">
+                    <div class="card-body">
+                        <h5 class="card-title">Ajouter une tâche</h5>
+                           <p class="card-text">Consultez toutes vos tâches par liste et suivez leur progression. Restez organisé et à jour.</p>
+                        <a href="{{ path('add_task') }}" class="btn btn-custom">Ajouter une tâche</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="col mb-4">
+                <div class="card custom-card">
+                    <img src="{{ asset('images/card/task-view.jpg') }}" class="card-img-top img-fluid" alt="Voir les tâches">
+                    <div class="card-body">
+                        <h5 class="card-title">Voir vos tâches</h5>
+                        <p class="card-text">Consultez toutes vos tâches par liste et suivez leur progression. Restez organisé et à jour.</p>
+                        <a href="{{ path('get_all_task') }}" class="btn btn-custom">Voir les tâches</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="col mb-4">
+                <div class="card custom-card">
+                    <img src="{{ asset('images/card/task-manage.jpg') }}" class="card-img-top img-fluid" alt="Gérer les tâches">
+                    <div class="card-body">
+                        <h5 class="card-title">Gérer les tâches</h5>
+                        <p class="card-text">Modifiez ou supprimez des tâches à tout moment. Assurez-vous que votre liste reste pertinente et à jour.</p>
+                        <a href="{{ path('get_all_task') }}" class="btn btn-custom">Gérer les tâches</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Section -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <h2>Commencez dès maintenant :</h2>
+                <a href="{{ path('get_all_task') }}" class="btn btn-custom btn-block mb-2">Voir toutes les tâches</a>
+                <a href="{{ path('add_task') }}" class="btn btn-custom btn-block">Ajouter une tâche</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Title Styling */
+        .title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 4rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #ad5389; /* Title color */
+        }
+
+        /* Custom Card Styling */
+        .custom-card {
+            border-radius: 10px;  /* Border radius for cards */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Box shadow */
+            overflow: hidden;
+        }
+
+        /* Ensuring all images in cards are the same size */
+        .card-img-top {
+            height: 400px;
+    
+            object-fit: cover;
+        }
+
+        /* Custom Button Styling */
+        .btn-custom {
+            background-color: #ad5389;
+            color: white;
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-custom:hover {
+            background-color: #d77fae;
+        }
+
+        /* Custom Card Body Styles */
+        .card-body {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
+
+        /* Optional: Add some space between cards */
+        .card {
+            margin-bottom: 20px;
+        }
+
+        /* Spacing between Blocks */
+        .mb-5 {
+            margin-bottom: 3rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem !important;
+        }
+    </style>
+{% endblock %}

@@ -29,6 +29,14 @@ class TaskController extends AbstractController
     }
 
 
+    /**
+     * @Route("/", name="home", methods={"GET"})
+     */
+    public function home(): Response
+    {
+        return $this->render('task/home.html.twig');
+    }
+
     /** 
      * @Route("/task", name="get_all_task", methods={"GET"})
      */
