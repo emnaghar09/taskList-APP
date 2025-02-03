@@ -23,4 +23,20 @@ class UserController extends AbstractController
         return $this->render('user/user.html.twig', ['users'=> $users]);
     }
 
+    /**
+     * @Route("/user/delete/{id}", name="user_delete", methods={"DELETE"})
+     */
+    public function delete($id): Response
+    {
+        $user = $this->userService->findUserById($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Dépense non trouvée');
+        }
+
+        $this->userService->deleteUser($user);
+
+        return $this->json(['message' => 'Dépense supprimée avec succès']);
+    }
+    
 }

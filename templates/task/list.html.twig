@@ -1,18 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une tâche{% endblock %}
-
+{% block title %}Tâches par utilisateur{% endblock %}
 {% block body %}
+    <!-- Affichage des messages flash de succès -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
    <div class="tasks-container">
-        <h1 class="mt-5">Toutes mes tache</h1>
+        <h1 class="mt-5"> <i class="fa-solid fa-list-check"></i> Toutes mes tache</h1>
         <a href="{{ path('add_task') }}" class="btn btn-custom">Ajouter une tache</a>
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
                     <th scope="col">Titre</th>
-                    <th scope="col">description</th>
+                    <th scope="col">Description</th>
                     <th scope="col">Date</th>
-                    <th scope="col">status</th>
+                    <th scope="col">Status</th>
+                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,10 +30,13 @@
                         <td>{{ task.date|date('d/m/Y H:i') }}</td>
                         <td>{{ task.status }}</td>
                         <td>
-                            {# <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-warning">Modifier</a>
-                            <form action="{{ path('task_delete', { 'id': task.id }) }}" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                            </form> #}
+                            {# <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-warning">Modifier</a> #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                                <form action="{{ path('task_delete', { 'id': task.id }) }}" method="post" style="display:inline;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

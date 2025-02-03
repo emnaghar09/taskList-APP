@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une tâche{% endblock %}
+{% block title %}liste des tâche{% endblock %}
 
 {% block body %}
    <div class="tasks-container">
@@ -25,8 +25,8 @@
                         <td>{{ task.status }}</td>
                         <td><a href="{{ path('get_task_by_list_id', { 'id': task.taskList.id }) }}">{{ task.taskList.name }}</a></td>
                         <td>
-                            {# <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-warning">Modifier</a>
-                            <form action="{{ path('task_delete', { 'id': task.id }) }}" method="post" style="display:inline;">
+                            {# <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-warning">Modifier</a> #}
+                            {# <form action="{{ path('task_delete', { 'id': task.id }) }}" method="post" style="display:inline;">
                                 <button type="submit" class="btn btn-danger">Supprimer</button>
                             </form> #}
                         </td>

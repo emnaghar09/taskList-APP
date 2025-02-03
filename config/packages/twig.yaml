@@ -1,6 +1,12 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['bootstrap_4_layout.html.twig']
+    paths:
+        '%kernel.project_dir%/public/images': images
+    globals:
+            error_404: 'error404.html.twig'
+            error_403: 'error403.html.twig'
+            error_500: 'error500.html.twig'
 when@test:
     twig:
         strict_variables: true

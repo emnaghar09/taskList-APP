@@ -4,18 +4,18 @@ namespace App\Service;
 use App\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TaskRepository;
-use App\Repository\TaskListRepository;
+
 
 class TaskService
 {
     private $entityManager;
     private $taskRepository;
-    private $taskListRepository;
-    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository, TaskListRepository $taskListRepository)
+
+    public function __construct(EntityManagerInterface $entityManager, TaskRepository $taskRepository)
     {
         $this->entityManager = $entityManager;
         $this->taskRepository = $taskRepository;
-        $this->taskListRepository = $taskListRepository;
+
     }
 
     public function getAllTask(): array
@@ -35,24 +35,20 @@ class TaskService
     }
 
 
-    public function getAllTaskList(): array
-    {
-        return $this->taskListRepository->findAll();
-    }
-    public function getUserTaskLists($idUser): array
-    {
-        return $this->taskListRepository->findByUserId($idUser);
-    }
-
-    public function getTaskList($id): array
-    {
-        return $this->taskListRepository->findById($id);
-    }
     public function getUserTasks($idUser): array
     {
         return $this->taskRepository->findTasksByUserId($idUser);
     }
+    public function deleteTask(Task $task): void
+    {
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
+    }
 
+    public function findtaskById(int $id): ?Task
+    {
+        return $this->entityManager->getRepository(Task::class)->find($id);
+    }
     
 
 }

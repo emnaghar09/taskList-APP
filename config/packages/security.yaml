@@ -22,7 +22,7 @@ security:
                 check_path: app_login
                 username_parameter: _username
                 password_parameter: _password
-                default_target_path: get_all_task
+                default_target_path: get_all_user_task
             logout:
                 path: app_logout
                 target: app_login
@@ -40,7 +40,11 @@ security:
         - { path: ^/task, roles: ROLE_ADMIN }
         - { path: ^/userTaskList, roles: [ROLE_USER, ROLE_ADMIN] }
         - { path: ^/new, roles: [ROLE_USER, ROLE_ADMIN] }
-
+        - { path: ^/taskList, roles: [ROLE_USER, ROLE_ADMIN] }
+        - { path: ^/task/.+, roles: [ROLE_USER, ROLE_ADMIN] }
+        - { path: ^/userTasks, roles: [ROLE_USER, ROLE_ADMIN] }
+        - { path: ^/taskList/delete/.+, roles: [ROLE_USER, ROLE_ADMIN] }
+        - { path: ^/task/delete/.+, roles: [ROLE_USER, ROLE_ADMIN] }
 when@test:
     security:
         password_hashers:

@@ -30,7 +30,20 @@ class UserService
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+    public function getUserUsers($idUser): array
+    {
+        return $this->userRepository->findUsersByUserId($idUser);
+    }
+    public function deleteUser(User $user): void
+    {
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+    }
 
+    public function findUserById(int $id): ?User
+    {
+        return $this->entityManager->getRepository(User::class)->find($id);
+    }
 
 
 

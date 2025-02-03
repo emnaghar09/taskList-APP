@@ -1,17 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une tâche{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
    <div class="tasks-container">
-        <h1 class="mt-5">Gestionnaire de tache</h1>
+        <h1 class="mt-5">  <img src="{{ asset('images/computer-icons-user-profile-circle-abstract.jpg') }}" alt="Users" width="80" height="80">
+ Liste des utilisateurs</h1>
         {# <a href="{{ path('add_user') }}" class="btn btn-custom">Ajouter un utilisateur</a> #}
+      
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
-                    <th scope="col">id</th>
+                    <th scope="col">Identificateur</th>
                     <th scope="col">Email</th>
-                    <th scope="col">liste de taches</th>
+                    <th scope="col">Liste de taches</th>
+                      <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +31,11 @@
                             {% else %}
                                 <span>Aucune liste de tâches</span>
                             {% endif %}</td>
-
+                       <td>
+                            <form action="{{ path('user_delete', { 'id': user.id }) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

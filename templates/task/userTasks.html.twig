@@ -1,8 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une tâche{% endblock %}
-
+{% block title %}Listes des tâches par utilisateur {% endblock %}
 {% block body %}
+    <!-- Affichage des messages flash de succès -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
    <div class="tasks-container">
         <h1 class="mt-5">Mes Listes</h1>
         <table class="table table-striped mt-3">
@@ -10,7 +16,8 @@
                 <tr>
                     <th scope="col">Titre</th>
                     <th scope="col">description</th>
-                    <th scope="col">Details</th>
+
+                      <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -18,12 +25,15 @@
                     <tr>
                         <td>{{ taskList.name }}</td>
                         <td>{{ taskList.date|date('d/m/Y H:i') }}</td>
-                        <td> <a href="{{ path('get_task_by_list_id', { 'id': taskList.id }) }}" class="btn btn-warning">Details</a></td>
-                        <td>
-                            {# <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-warning">Modifier</a>
-                            <form action="{{ path('task_delete', { 'id': task.id }) }}" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                            </form> #}
+                        <td> <a href="{{ path('get_task_by_list_id', { 'id': taskList.id }) }}" class="btn btn-warning"><i class="fa-solid fa-circle-info"></i></a>
+                            {# <a href="{{ path('task_edit', { 'id': task.id }) }}" class="btn btn-warning">Modifier</a>#}
+                               {# {% if is_granted('ROLE_ADMIN') %}
+                        <form action="{{ path('task_list_delete', { 'id': taskList.id }) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+  {% endif %} #}
+
                         </td>
                     </tr>
                 {% endfor %}
@@ -38,5 +48,27 @@
         {{ form_end(form) }}
     </div>
     </div>
+<script>
+    document.getElementById('add-task-form').addEventListener('submit', function (e) {
+        e.preventDefault(); // Empêche le comportement par défaut pour AJAX.
+        
+        const form = this;
+
+        // Envoi du formulaire via fetch (AJAX)
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Recharge la page après une réponse réussie
+                window.location.reload();
+            } else {
+                console.error('Erreur lors de la soumission du formulaire');
+            }
+        })
+        .catch(error => console.error('Erreur :', error));
+    });
+</script>
 
 {% endblock %}

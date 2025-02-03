@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur interne du serveur{% endblock %}
+
+{% block body %}
+    <div style="text-align: center; padding: 50px;">
+        <h1>😵 Oups ! Une erreur est survenue.</h1>
+        <p>Le serveur a rencontré un problème et ne peut pas traiter votre demande pour le moment.</p>
+        <p>Veuillez réessayer plus tard.</p>
+        <a href="{{ path('get_all_user_task') }}" style="text-decoration: none; color: white; background: #007BFF; padding: 10px 20px; border-radius: 5px;">
+            Retour à l'accueil
+        </a>
+    </div>
+{% endblock %}

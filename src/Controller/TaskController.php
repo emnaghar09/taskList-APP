@@ -8,17 +8,24 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Task;
 use App\Service\TaskService;
+use App\Service\TaskListService;
 use App\Form\TaskType;
 use App\Form\TaskListFormType;
 use App\Entity\TaskList;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Event\TaskListCreatedEvent;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TaskController extends AbstractController
 {
     private $taskService;
-    public function __construct(TaskService $taskService)
+    private $taskListService;
+    private EventDispatcherInterface $dispatcher;
+    public function __construct(TaskService $taskService, TaskListService $taskListService, EventDispatcherInterface $dispatcher)
     {
         $this->taskService= $taskService;
+        $this->taskListService= $taskListService;
+        $this->dispatcher = $dispatcher;
     }
 
 
@@ -34,7 +41,7 @@ class TaskController extends AbstractController
      * @Route("/taskList/{id}", name="get_task_list_by_id", methods={"GET"})
      */
     public function getTaskList($id): Response{
-        $taskLists=  $this->taskService->getTaskList($id);
+        $taskLists=  $this->taskListService->getTaskList($id);
         return $this->render('task/index.html.twig', ['taskLists'=> $taskLists]);
     }
         /** 
@@ -50,7 +57,7 @@ class TaskController extends AbstractController
      */
     public function getUserTaskList(Request $request,EntityManagerInterface $entityManager): Response{
         $userId=$this->getUser()->getId();
-        $userTaskLists=  $this->taskService->getUserTaskLists($userId);
+        $userTaskLists=  $this->taskListService->getUserTaskLists($userId);
         $taskList= new TaskList();
         $form = $this->createForm(TaskListFormType::class, $taskList);
         $form->handleRequest($request);
@@ -60,11 +67,11 @@ class TaskController extends AbstractController
             $entityManager->persist($taskList);
             $entityManager->flush();
             $this->addFlash('success', 'Task created successfully!');
-            $form = $this->createForm(TaskListFormType::class, $taskList); // Nouveau formulaire pour cet objet
+                    // Dispatch the event
+            // $event = new TaskListCreatedEvent($taskList);
+            // $this->dispatcher->dispatch($event);
 
-            return $this->render('task/userTasks.html.twig', ['userTaskLists'=> $userTaskLists,
-                'form' => $form->createView(),
-            ]);
+            return $this->redirectToRoute('get_All_user_taskList');
         }
         return $this->render('task/userTasks.html.twig', ['userTaskLists'=> $userTaskLists, 'form'=>$form->createView()]);
     }
@@ -94,6 +101,70 @@ class TaskController extends AbstractController
         }
         return $this->render('task/new.html.twig', ['form'=>$form->createView()]);
     }
+/**
+ * @Route("/task/new/{id}", name="add_task_id_list", methods={"GET", "POST"})
+ */
+public function createTaskWithIdList(Request $request, $id): Response
+{
+    $task = new Task();
+    
+    // Récupérer la taskList en fonction de l'ID passé dans l'URL
+    $taskList = $this->taskListService->getTaskList($id); 
 
+    if (!$taskList) {
+        throw $this->createNotFoundException('Liste de tâches non trouvée');
+    }
 
+    $task->setTaskList($taskList);
+    $form = $this->createForm(TaskType::class, $task, [
+        'user' => $this->getUser(),
+    ]);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $this->taskService->createTask($task);
+        $this->addFlash('success', 'Tâche créée avec succès!');
+        return $this->redirectToRoute('get_task_by_list_id', ['id' => $id]);
+    }
+
+    return $this->render('task/new.html.twig', ['form' => $form->createView(), 'taskList' => $taskList]);
+}
+
+    /**
+     * @Route("/task/delete/{id}", name="task_delete", methods={"DELETE", "POST"})
+     */
+    public function delete($id): Response
+    {
+        $task = $this->taskService->findtaskById($id);
+
+        if (!$task) {
+            throw $this->createNotFoundException('Dépense non trouvée');
+        }
+
+        $this->taskService->deletetask($task);
+        $userId = $this->getUser()->getId();
+        $userTasks = $this->taskService->getUserTasks($userId);
+        $this->addFlash('success', 'Tâche supprimée avec succès !');
+        return $this->render('task/list.html.twig', [
+            'userTasks' => $userTasks
+        ]);
+    }
+        /**
+     * @Route("/taskList/delete/{id}", name="task_list_delete", methods={"DELETE", "POST"})
+     */
+    public function deleteList($id): Response
+    {
+        $task = $this->taskListService->findTaskListById($id);
+
+        if (!$task) {
+            throw $this->createNotFoundException('Dépense non trouvée');
+        }
+        $this->taskListService->deleteTaskList($task);
+        $userId=$this->getUser()->getId();
+        $userTaskLists=  $this->taskListService->getUserTaskLists($userId);
+        $this->addFlash('success', 'Liste supprimée avec succès !');
+        return $this->render('task/userTasks.html.twig', [
+            'userTasks' => $userTaskLists
+        ]);
+    }
 }
